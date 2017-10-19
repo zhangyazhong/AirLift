@@ -21,7 +21,7 @@ $('#login-button').click(function() {
             if (result.status_code !== undefined && result.status_code !== 0) {
             } else {
                 active($('#share-container'));
-                connectSocket;
+                connectSocket();
                 $.ajax({
                     type: "POST",
                     url: server_http + '/flexible/user/bind',
