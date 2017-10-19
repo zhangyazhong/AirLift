@@ -1,0 +1,20 @@
+{
+  "name": "AirLift",
+  "manifest_version": 2,
+  "version": "1.0.0",
+  "description": "在设备间快速共享文件",
+  "homepage_url": "https://github.com/zhangyazhong/AirLift",
+  "permissions": [
+    "cookies", "storage", "*://sissors.cn/* "
+  ],
+  "browser_action": {
+    "default_icon": "logo/air_lift_logo_512.png",
+    "default_title": "Air Lift",
+    "default_popup": "view/popup.html"
+  },
+  "icons": {
+    "16": "logo/air_lift_logo_512.png",
+    "48": "logo/air_lift_logo_512.png",
+    "128": "logo/air_lift_logo_512.png"
+  }
+}

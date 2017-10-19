@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh_CN">
+    <head>
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="../css/bootstrap.min.css">
+    </head>
+    <style>
+        * {
+            font-size: 16px;
+            margin: 0;
+            padding: 0;
+        }
+        html {
+            width: 440px;
+        }
+        #main-container {
+           width: 400px;
+           margin: 0 auto;
+           margin-top: 20px;
+           margin-bottom: 20px; 
+        }
+        #title-container {
+            width: 400px;
+            height: 32px;
+        }
+        #title-panel {
+            width: 320px;
+            margin: 0 auto;
+            line-height: 32px;
+        }
+        #login-container {
+            width: 320px;
+            margin: 0 auto;
+        }
+    </style>
+    <body>
+        <div id="main-container">
+            <div id="title-container">
+                <div id="title-panel">
+                    <img src="../logo/air_lift_logo_512.png" width="32px" height="32px" style="float: left; margin-left: 80px"/>
+                    <h2 style="margin-left: 145px">Air Lift</h2>
+                </div>
+            </div>
+            <hr style="margin-top: 10px; margin-bottom: 20px"/>
+            <div class="top-container" id="login-container">
+                <div class="input-group">
+                    <span class="input-group-addon" id="email-addon">邮箱</span>
+                    <input type="text" class="form-control" id="email_input" aria-describedby="email-addon">
+                </div>
+                <div class="input-group" style="margin-top: 10px">
+                    <span class="input-group-addon" id="password-addon">密码</span>
+                    <input type="password" class="form-control" id="password_input" aria-describedby="password-addon">
+                </div>
+                <center>
+                    <button type="button" class="btn btn-primary" id="login-button" style="margin-top: 20px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;登录&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                </center>
+            </div>
+            <div class="top-container" id="share-container" style="display: none">
+                <div id="text-display-container"> 
+                    <div class="form-group" id="text-panel">
+                        <!-- <label for="comment">Comment:</label> -->
+                        <textarea class="form-control" id="text-area" rows="5" style="resize: none"></textarea>
+                    </div>
+                </div>
+                <div id="text-action-container">
+                    <p align="right">
+                        <div id="text-alert-container" style="width: 215px; height:28px; float: left">
+                            <div class="alert alert-danger" id="text-alert-info" role="alert" style="padding-top: 5px; padding-bottom: 5px; display: none"></div>
+                        </div>
+                        <button type="button" class="btn btn-warning" id="undo-button" style="margin-left: 5px"><span class="glyphicon glyphicon-repeat" aria-hidden="true" style="top: 2px"></span>&nbsp;&nbsp;撤销&nbsp;&nbsp;</button>
+                        <button type="button" class="btn btn-success" id="share-button"><span class="glyphicon glyphicon-upload" aria-hidden="true" style="top: 2px"></span>&nbsp;&nbsp;共享&nbsp;&nbsp;</button>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <script src="../js/jquery.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script src="../js/popup.js"></script>
+    </body>
+</html>
