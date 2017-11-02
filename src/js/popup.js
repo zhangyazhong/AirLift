@@ -20,22 +20,10 @@ $('#login-button').click(function() {
         success: function(result) {
             if (result.status_code !== undefined && result.status_code !== 0) {
             } else {
+                fetchText();
                 active($('#share-container'));
                 connectSocket();
-                $.ajax({
-                    type: "POST",
-                    url: server_http + '/flexible/user/bind',
-                    success: function(result) {
-                        if (result.status_code !== undefined && result.status_code !== 0) {
-                        } else {
-                            const token = result.deviceToken;
-                            chrome.storage.local.get('token', function(result) {
-                                result['token'] = token;
-                                chrome.storage.local.set(result);            
-                            });
-                        }
-                    }
-                });
+                bindDevice();
             }
         }
     });
@@ -54,6 +42,8 @@ $('#share-button').click(function() {
                 notify($('#text-alert-info'), result.status_msg);
             } else {
                 last_text = text;
+                notify($('#text-success-info'), "分享成功");
+                persist("text", text);
             }
         },
         error: function() {
@@ -68,8 +58,9 @@ $('#undo-button').click(function() {
 
 $(function() {
     chrome.storage.local.get('token', function(result) {
-        if (result['token'] !== undefined) {
+        if (result['token'] !== undefined && result['token'].length > 0) {
             active($('#share-container'));
+            loadText();
             $.ajax({
                 type: "POST",
                 url: server_http + '/flexible/user/login',
@@ -93,6 +84,27 @@ $(function() {
     });
 });
 
+function bindDevice() {
+    $.ajax({
+        type: "POST",
+        url: server_http + '/flexible/user/bind',
+        success: function(result) {
+            if (result.status_code !== undefined && result.status_code !== 0) {
+            } else {
+                const token = result.deviceToken;
+                chrome.storage.local.get('token', function(result) {
+                    result['token'] = token;
+                    chrome.storage.local.set(result);
+                });
+                chrome.storage.sync.get('token', function (result) {
+                    result['token'] = token;
+                    chrome.storage.sync.set(result);
+                });
+            }
+        }
+    });
+}
+
 function connectSocket() {
     socket = new WebSocket(server_ws + '/flexible/ws/text');
     socket.onopen = function(event) {
@@ -100,12 +112,17 @@ function connectSocket() {
             const data = JSON.parse(event.data);
             switch (data.type) {
                 case 'text': {
-                    $('#text-area').val(data.text.text);
-                    last_text = data.text.text;
+                    displayText(data.text.text);
                 }
             }
         };
     };
+}
+
+function loadText() {
+    chrome.storage.local.get('text', function(result) {
+        displayText(result['text']);
+    });
 }
 
 function fetchText() {
@@ -115,11 +132,16 @@ function fetchText() {
         success: function(result) {
             if (result.status_code !== undefined && result.status_code !== 0) {
             } else {
-                $('#text-area').val(result.text);
-                last_text = result.text;
+                displayText(result.text);
             }
         }
     });
+}
+
+function displayText(text) {
+    $('#text-area').val(text);
+    last_text = text;
+    persist('text', text);
 }
 
 function notify(dom, info) {
@@ -127,12 +149,19 @@ function notify(dom, info) {
     dom.css('display', 'block');
     window.setTimeout(function() {
         dom.fadeOut(2000);
-    }, 5000); 
+    }, 3000);
 }
 
 function active(dom) {
     dom.css('display', 'block');
     active_container.css('display', 'none');
     active_container = dom;
+}
+
+function persist(key, value) {
+    chrome.storage.local.get(key, function(result) {
+        result[key] = value;
+        chrome.storage.local.set(result);
+    });
 }
 

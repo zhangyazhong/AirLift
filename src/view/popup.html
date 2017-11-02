@@ -35,14 +35,14 @@
     </style>
     <body>
         <div id="main-container">
-            <div id="title-container">
-                <div id="title-panel">
-                    <img src="../logo/air_lift_logo_512.png" width="32px" height="32px" style="float: left; margin-left: 80px"/>
-                    <h2 style="margin-left: 145px">Air Lift</h2>
-                </div>
-            </div>
-            <hr style="margin-top: 10px; margin-bottom: 20px"/>
             <div class="top-container" id="login-container">
+                <div id="title-container">
+                    <div id="title-panel">
+                        <img src="../logo/air_lift_logo_512.png" width="32px" height="32px" style="float: left; margin-left: 110px"/>
+                        <!--<h2 style="margin-left: 95px">Air Lift</h2>-->
+                    </div>
+                </div>
+                <hr style="margin-top: 10px; margin-bottom: 20px"/>
                 <div class="input-group">
                     <span class="input-group-addon" id="email-addon">邮箱</span>
                     <input type="text" class="form-control" id="email_input" aria-describedby="email-addon">
@@ -66,6 +66,7 @@
                     <p align="right">
                         <div id="text-alert-container" style="width: 215px; height:28px; float: left">
                             <div class="alert alert-danger" id="text-alert-info" role="alert" style="padding-top: 5px; padding-bottom: 5px; display: none"></div>
+                            <div class="alert alert-success" id="text-success-info" role="alert" style="padding-top: 5px; padding-bottom: 5px; display: none"></div>
                         </div>
                         <button type="button" class="btn btn-warning" id="undo-button" style="margin-left: 5px"><span class="glyphicon glyphicon-repeat" aria-hidden="true" style="top: 2px"></span>&nbsp;&nbsp;撤销&nbsp;&nbsp;</button>
                         <button type="button" class="btn btn-success" id="share-button"><span class="glyphicon glyphicon-upload" aria-hidden="true" style="top: 2px"></span>&nbsp;&nbsp;共享&nbsp;&nbsp;</button>
