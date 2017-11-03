@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="../css/bootstrap.min.css">
+        <link rel='stylesheet' href='../vendor/nprogress/nprogress.css'/>
     </head>
     <style>
         * {
@@ -55,11 +56,12 @@
                     <button type="button" class="btn btn-primary" id="login-button" style="margin-top: 20px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;登录&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
                 </center>
             </div>
-            <div class="top-container" id="share-container" style="display: none">
+            <div class="top-container" id="upload-container" style="display: none">
+                <!--<div id="transfer-progress"><span></span></div>-->
                 <div id="text-display-container"> 
                     <div class="form-group" id="text-panel">
                         <!-- <label for="comment">Comment:</label> -->
-                        <textarea class="form-control" id="text-area" rows="5" style="resize: none"></textarea>
+                        <label for="text-area"></label><textarea class="form-control" id="text-area" rows="5" style="resize: none"></textarea>
                     </div>
                 </div>
                 <div id="text-action-container">
@@ -69,12 +71,13 @@
                             <div class="alert alert-success" id="text-success-info" role="alert" style="padding-top: 5px; padding-bottom: 5px; display: none"></div>
                         </div>
                         <button type="button" class="btn btn-warning" id="undo-button" style="margin-left: 5px"><span class="glyphicon glyphicon-repeat" aria-hidden="true" style="top: 2px"></span>&nbsp;&nbsp;撤销&nbsp;&nbsp;</button>
-                        <button type="button" class="btn btn-success" id="share-button"><span class="glyphicon glyphicon-upload" aria-hidden="true" style="top: 2px"></span>&nbsp;&nbsp;共享&nbsp;&nbsp;</button>
+                        <button type="button" class="btn btn-success" id="upload-button"><span class="glyphicon glyphicon-upload" aria-hidden="true" style="top: 2px"></span>&nbsp;&nbsp;共享&nbsp;&nbsp;</button>
                     </p>
                 </div>
             </div>
         </div>
         <script src="../js/jquery.min.js"></script>
+        <script src='../vendor/nprogress/nprogress.js'></script>
         <script src="../js/bootstrap.min.js"></script>
         <script src="../js/popup.js"></script>
     </body>
