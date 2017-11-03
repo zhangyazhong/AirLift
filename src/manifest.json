@@ -2,7 +2,7 @@
   "name": "Air Lift",
   "short_name": "Air Lift",
   "manifest_version": 2,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "在设备间快速共享文件",
   "homepage_url": "https://github.com/zhangyazhong/AirLift",
   "permissions": [
