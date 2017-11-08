@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <link rel="stylesheet" href="../css/bootstrap.min.css">
         <link rel='stylesheet' href='../vendor/nprogress/nprogress.css'/>
+        <link rel='stylesheet' href='../vendor/amaze-ui/amazeui.min.css'/>
     </head>
     <style>
         * {
@@ -15,32 +16,36 @@
             width: 440px;
         }
         #main-container {
-           width: 400px;
-           margin: 0 auto;
-           margin-top: 20px;
-           margin-bottom: 20px; 
+            width: 440px;
+            margin: 20px auto 0;
+        }
+        #login-container {
+            width: 320px;
+            margin: 0 auto;
         }
         #title-container {
             width: 400px;
             height: 32px;
+            margin: 0 auto;
         }
         #title-panel {
             width: 320px;
             margin: 0 auto;
             line-height: 32px;
         }
-        #login-container {
-            width: 320px;
-            margin: 0 auto;
+        #upload-container {
+            width: 440px;
+        }
+        a {
+            text-decoration: none;
         }
     </style>
     <body>
         <div id="main-container">
-            <div class="top-container" id="login-container">
+            <div class="top-container" id="login-container" style="display: none">
                 <div id="title-container">
                     <div id="title-panel">
                         <img src="../logo/air_lift_logo_512.png" width="32px" height="32px" style="float: left; margin-left: 110px"/>
-                        <!--<h2 style="margin-left: 95px">Air Lift</h2>-->
                     </div>
                 </div>
                 <hr style="margin-top: 10px; margin-bottom: 20px"/>
@@ -56,28 +61,57 @@
                     <button type="button" class="btn btn-primary" id="login-button" style="margin-top: 20px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;登录&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</button>
                 </center>
             </div>
-            <div class="top-container" id="upload-container" style="display: none">
-                <!--<div id="transfer-progress"><span></span></div>-->
-                <div id="text-display-container"> 
-                    <div class="form-group" id="text-panel">
-                        <!-- <label for="comment">Comment:</label> -->
-                        <label for="text-area"></label><textarea class="form-control" id="text-area" rows="5" style="resize: none"></textarea>
-                    </div>
-                </div>
-                <div id="text-action-container">
-                    <p align="right">
-                        <div id="text-alert-container" style="width: 215px; height:28px; float: left">
-                            <div class="alert alert-danger" id="text-alert-info" role="alert" style="padding-top: 5px; padding-bottom: 5px; display: none"></div>
-                            <div class="alert alert-success" id="text-success-info" role="alert" style="padding-top: 5px; padding-bottom: 5px; display: none"></div>
+            <div class="top-container" id="upload-container" style="margin-top: -18px">
+                <div data-am-widget="tabs" class="am-tabs am-tabs-default" style="margin: 0">
+                    <ul class="am-tabs-nav am-cf">
+                        <li class="am-active"><a href="[data-tab-panel-0]" style="text-decoration: none">文本</a></li>
+                        <li class=""><a href="[data-tab-panel-1]" style="text-decoration: none">文件</a></li>
+                    </ul>
+                    <div class="am-tabs-bd" style="border: 0">
+                        <div data-tab-panel-0 class="am-tab-panel am-active" style="padding-bottom: 0; padding-top: 0">
+                            <div id="text-display-container">
+                                <div class="form-group" id="text-panel">
+                                    <label for="text-area"></label><textarea class="form-control" id="text-area" rows="5" style="resize: none" autofocus="autofocus"></textarea>
+                                </div>
+                            </div>
+                            <div id="text-action-container">
+                                <p align="right">
+                                    <div id="text-alert-container" style="width: 215px; height:28px; float: left">
+                                        <div class="alert alert-danger" id="text-alert-info" role="alert" style="padding-top: 5px; padding-bottom: 5px; display: none"></div>
+                                        <div class="alert alert-success" id="text-success-info" role="alert" style="padding-top: 5px; padding-bottom: 5px; display: none"></div>
+                                    </div>
+                                    <button type="button" class="btn btn-warning" id="text-undo-button" style="margin-left: 20px"><span class="glyphicon glyphicon-repeat" aria-hidden="true" style="top: 2px"></span>&nbsp;&nbsp;撤销&nbsp;&nbsp;</button>
+                                    <button type="button" class="btn btn-success" id="text-upload-button"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true" style="top: 2px"></span>&nbsp;&nbsp;共享&nbsp;&nbsp;</button>
+                                </p>
+                            </div>
                         </div>
-                        <button type="button" class="btn btn-warning" id="undo-button" style="margin-left: 5px"><span class="glyphicon glyphicon-repeat" aria-hidden="true" style="top: 2px"></span>&nbsp;&nbsp;撤销&nbsp;&nbsp;</button>
-                        <button type="button" class="btn btn-success" id="upload-button"><span class="glyphicon glyphicon-upload" aria-hidden="true" style="top: 2px"></span>&nbsp;&nbsp;共享&nbsp;&nbsp;</button>
-                    </p>
+                        <div data-tab-panel-1 class="am-tab-panel" style="height: 210px">
+                            <div id="file-upload-container">
+                                <div class="am-form-group am-form-file">
+                                    <button type="button" class="am-btn am-btn-danger am-btn-sm">
+                                        <i class="am-icon-cloud-upload"></i> 选择要上传的文件</button>
+                                    <input id="doc-form-file" type="file" name="file" multiple>
+                                </div>
+                                <div id="file-list"></div>
+                            </div>
+                            <div id="file-action-container" style="position:fixed; bottom:0">
+                                <p align="right">
+                                    <div id="file-alert-container" style="width: 215px; height:28px; float: left">
+                                        <div class="alert alert-danger" id="file-alert-info" role="alert" style="padding-top: 5px; padding-bottom: 5px; display: none"></div>
+                                        <div class="alert alert-success" id="file-success-info" role="alert" style="padding-top: 5px; padding-bottom: 5px; display: none"></div>
+                                    </div>
+                                    <button type="button" class="btn btn-warning" id="file-download-button" style="margin-left: 20px"><span class="glyphicon glyphicon-circle-arrow-down" aria-hidden="true" style="top: 2px"></span>&nbsp;&nbsp;下载&nbsp;&nbsp;</button>
+                                    <button type="button" class="btn btn-success" id="file-upload-button"><span class="glyphicon glyphicon-circle-arrow-up" aria-hidden="true" style="top: 2px"></span>&nbsp;&nbsp;共享&nbsp;&nbsp;</button>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         <script src="../js/jquery.min.js"></script>
         <script src='../vendor/nprogress/nprogress.js'></script>
+        <script src="../vendor/amaze-ui/amazeui.min.js"></script>
         <script src="../js/bootstrap.min.js"></script>
         <script src="../js/popup.js"></script>
     </body>

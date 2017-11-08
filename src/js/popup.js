@@ -3,7 +3,8 @@ const server_http = 'https://' + server_host;
 const server_ws = 'wss://' + server_host;
 
 var last_text = '';
-var active_container = $('#login-container');
+var last_file = {};
+var active_container = $('#upload-container');
 var socket;
 
 $('#login-button').click(function() {
@@ -21,6 +22,7 @@ $('#login-button').click(function() {
             if (result.status_code !== undefined && result.status_code !== 0) {
             } else {
                 fetchText();
+                fetchFile();
                 active($('#upload-container'));
                 connectSocket();
                 bindDevice();
@@ -29,8 +31,7 @@ $('#login-button').click(function() {
     });
 });
 
-$('#upload-button').click(function() {
-    beforeUpload();
+$('#text-upload-button').click(function() {
     var text = $('#text-area').val();
     $.ajax({
         type: "POST",
@@ -38,15 +39,16 @@ $('#upload-button').click(function() {
         data: {  
             'text': text
         },
+        beforeSend: function () {
+            beforeUpload();
+        },
         success: function(result) {
             if (result.status_code !== undefined && result.status_code !== 0) {
-                notify($('#text-alert-info'), result.status_msg);
+                afterUpload($('#text-alert-info'), result.status_msg);
             } else {
                 afterUpload($('#text-success-info'), '分享成功');
-                last_text = text;
-                persist("text", text);
+                displayText(text);
             }
-            afterUpload();
         },
         error: function() {
             afterUpload($('#text-alert-info'), '分享失败');
@@ -54,16 +56,41 @@ $('#upload-button').click(function() {
     });
 });
 
-$('#undo-button').click(function() {
+$('#text-undo-button').click(function() {
     $('#text-area').val(last_text);
+});
+
+$('#file-upload-button').click(function () {
+    var formData = new FormData();
+    formData.append("file", $("#doc-form-file")[0].files[0]);
+    $.ajax({
+        type: 'POST',
+        url: server_http + '/flexible/file/share',
+        data: formData,
+        processData: false,
+        contentType: false,
+        beforeSend: function(){
+            beforeUpload();
+        },
+        success: function(result) {
+            if (result.status_code !== undefined && result.status_code !== 0) {
+                afterUpload($('#file-alert-info'), result.status_msg);
+            } else {
+                afterUpload($('#file-success-info'), '上传成功');
+            }
+        },
+        error : function() {
+            afterUpload($('#file-alert-info'), '上传失败');
+        }
+    });
 });
 
 $(function() {
     initConfig();
     chrome.storage.local.get('token', function(result) {
         if (result['token'] !== undefined && result['token'].length > 0) {
-            active($('#upload-container'));
             loadText();
+            loadFile();
             $.ajax({
                 type: "POST",
                 url: server_http + '/flexible/user/login',
@@ -76,6 +103,7 @@ $(function() {
                         active($('#login-container'));
                     } else {
                         fetchText();
+                        fetchFile();
                         connectSocket();
                     }
                 },
@@ -83,6 +111,8 @@ $(function() {
                     active($('#login-container'));
                 }
             });
+        } else {
+            active($('#login-container'));
         }
     });
 });
@@ -95,6 +125,14 @@ function initConfig() {
     NProgress.configure({
         showSpinner: false,
         trickleSpeed: 100
+    });
+    // 配置文件预览
+    $('#doc-form-file').on('change', function() {
+        var fileNames = '';
+        $.each(this.files, function() {
+            fileNames += '<span class="am-badge">' + this.name + '</span> ';
+        });
+        $('#file-list').html(fileNames);
     });
 }
 
@@ -133,6 +171,11 @@ function connectSocket() {
             switch (data.type) {
                 case 'text': {
                     displayText(data.text.text);
+                    break;
+                }
+                case 'file': {
+                    displayFile(data.file);
+                    break;
                 }
             }
         };
@@ -145,6 +188,15 @@ function connectSocket() {
 function loadText() {
     chrome.storage.local.get('text', function(result) {
         displayText(result['text']);
+    });
+}
+
+/**
+ * 从chrome storage中拉取缓存的文件，并显示到文件框
+ */
+function loadFile() {
+    chrome.storage.local.get('file', function(result) {
+        displayText(result['file']);
     });
 }
 
@@ -165,6 +217,22 @@ function fetchText() {
 }
 
 /**
+ * 从server中拉取文件信息，并显示到文件框中（只包含文件token、路径等）
+ */
+function fetchFile() {
+    $.ajax({
+        type: "GET",
+        url: server_http + '/flexible/file/fetch',
+        success: function(result) {
+            if (result.status_code !== undefined && result.status_code !== 0) {
+            } else {
+                displayFile(result);
+            }
+        }
+    });
+}
+
+/**
  * 显示text
  *
  * @param text 文本内容
@@ -173,6 +241,21 @@ function displayText(text) {
     $('#text-area').val(text);
     last_text = text;
     persist('text', text);
+}
+
+/**
+ * 显示file
+ *
+ * @param file 文件对象，包括token、path等
+ */
+function displayFile(file) {
+    /** @namespace file.path */
+    var path = file.path;
+    var name = path.substring(path.lastIndexOf('/') + 1);
+    var tag = '<a href="' + server_http + '/flexible/' + path + '" download="' + name + '"><span class="am-badge">' + name + '</span></a>';
+    $('#file-list').html(tag);
+    last_file = file;
+    persist("file", last_file);
 }
 
 /**
@@ -195,8 +278,8 @@ function notify(dom, info) {
  * @param dom container选择器
  */
 function active(dom) {
-    dom.css('display', 'block');
     active_container.css('display', 'none');
+    dom.css('display', 'block');
     active_container = dom;
 }
 
