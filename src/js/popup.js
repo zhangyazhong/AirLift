@@ -196,7 +196,7 @@ function loadText() {
  */
 function loadFile() {
     chrome.storage.local.get('file', function(result) {
-        displayText(result['file']);
+        displayFile(result['file']);
     });
 }
 
